@@ -8,6 +8,13 @@
       "when": 1750545022700,
       "tag": "0000_yielding_nitro",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750571589965,
+      "tag": "0001_furry_hellcat",
+      "breakpoints": true
     }
   ]
 }

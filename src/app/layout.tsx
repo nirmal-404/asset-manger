@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Asset Manager App",
-  description: "Asset Manager App",
+  title: "Asset manager App",
+  description: "Asset manager App",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        {children}
+        <main className="mt-[64px] px-4">{children}</main>
       </body>
     </html>
   );
