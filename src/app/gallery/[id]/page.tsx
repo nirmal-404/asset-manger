@@ -1,4 +1,8 @@
 import { getAssetByIdAction } from "@/actions/dashboard-actions";
+import {
+  createPaypalOrderAction,
+  hasUserPurchasedAssetAction,
+} from "@/actions/payment-actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -67,12 +71,30 @@ async function GalleryContent({
   const { asset, categoryName, userName, userImage, userId } = result;
 
   const isAuthor = session?.user.id === userId;
+  const initials = userName
+    ? userName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+    : "U";
+
+  const hasPurchasedAsset = session?.user?.id
+    ? await hasUserPurchasedAssetAction(params.id)
+    : false;
 
   async function handlePurchase() {
     "use server";
 
-    // TODO: implemet the payment + server action + redirect logic
+    const result = await createPaypalOrderAction(params.id);
 
+    if (result.alreadyPurchased) {
+      redirect(`/gallery/${params.id}?success=true`);
+    }
+
+    if (result.approvalLink) {
+      redirect(result.approvalLink);
+    }
   }
 
   return (
@@ -120,7 +142,7 @@ async function GalleryContent({
                 <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6 text-white">
                   <h3 className="text-xl font-bold mb-2">Premium Asset</h3>
                   <div>
-                    <span className="text-3xl font-bold">LKR 5000.00</span>
+                    <span className="text-3xl font-bold">$5.00</span>
                     <span className="ml-2 text-gray-300">
                       One Time Purchase
                     </span>
@@ -137,7 +159,7 @@ async function GalleryContent({
                             asset
                           </p>
                         </div>
-                      ) : false ? (
+                      ) : hasPurchasedAsset ? (
                         <Button
                           asChild
                           className="w-full bg-green-600 text-white h-12"
